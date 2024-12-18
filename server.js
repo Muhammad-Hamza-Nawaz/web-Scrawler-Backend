@@ -1,6 +1,8 @@
 import express from 'express';
 import axios from 'axios';
 import cheerio from 'cheerio';
+import escape from'escape-html'; 
+import sanitizeHtml from 'sanitize-html'; 
 import cors from("cors")
 const app = express();
 const PORT = 3000;
@@ -14,13 +16,13 @@ app.get("/api/bbc-articles", async (req, res) => {
       });
       
     
-    const html = response.data;
-    const $ = cheerio.load(html);
+      const sanitizedHtml = sanitizeHtml(response.data); 
+      const $ = cheerio.load(sanitizedHtml);
     
     const articles = [];
 
     $(".sc-93223220-0").each((index, element) => {
-      const heading = $(element).find('h2').text().trim(); 
+      const heading = escape($(element).find('h2').text().trim()); 
       const description = $(element).find('p').text().trim() || "No description available"; 
 
       articles.push({ heading, description }); 
