@@ -16,7 +16,11 @@ app.get("/api/bbc-articles", async (req, res) => {
       });
       
     
-      const sanitizedHtml = sanitizeHtml(response.data); 
+      const responseHtml = response.data;
+const sanitizedHtml = sanitizeHtml(responseHtml, {
+    allowedTags: sanitizeHtml.defaults.allowedTags,
+    allowedAttributes: sanitizeHtml.defaults.allowedAttributes,
+});
       const $ = cheerio.load(sanitizedHtml);
     
     const articles = [];
